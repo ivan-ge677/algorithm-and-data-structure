@@ -12,6 +12,7 @@
 from calc_time import calc_time
 import random
 import sys
+
 # 设置递归最大深度
 sys.setrecursionlimit(100000)
 
@@ -112,6 +113,89 @@ def quick_sort(li):
     _quick_sort(li, left, right)
 
 
+@calc_time
+def heap_sort(li):
+    # 堆排序
+    # 复杂度：O(nlogn)
+    def sift(li, low, high):
+        top = li[low]
+        i = low
+        j = 2 * i + 1
+        while j <= high:
+            if j + 1 <= high and li[j + 1] > li[j]:
+                j = j + 1
+            if top < li[j]:
+                li[i] = li[j]
+                i = j
+                j = 2 * i + 1
+            else:
+                li[i] = top
+                break
+        li[i] = top
+
+    N = len(li)
+    # 建一个大根堆
+    for i in range((N - 1) // 2, -1, -1):
+        sift(li, i, N - 1)
+    # 将堆顶与堆底置换，堆长度减一，把新堆进行正序
+    for j in range(N - 1, 0, -1):
+        li[j], li[0] = li[0], li[j]
+        sift(li, 0, j - 1)
+
+
+@calc_time
+def heap_sort_inner(li):
+    # 内置堆排序
+    import heapq
+    # 建一个小根堆
+    heapq.heapify(li)
+    result = []
+    for i in range(len(li)):
+        result.append(heapq.heappop(li))
+    return result
+
+
+"""
+top k问题
+heap排序后切片：O(nlogn)
+lowB三人组：O(nk)
+heap排序：O(nlogk)
+"""
+
+
+def topk_heap(li, k):
+    def sift(li, low, high):
+        top = li[low]
+        i = low
+        j = 2 * i + 1
+        while j <= high:
+            if j + 1 <= high and li[j + 1] < li[j]:
+                j = j + 1
+            if top > li[j]:
+                li[i] = li[j]
+                i = j
+                j = 2 * i + 1
+            else:
+                li[i] = top
+                break
+        li[i] = top
+
+    topk = li[:k]
+    # 1.建一个小根堆（sift进行修改）
+    for i in range((k - 1) // 2, -1, -1):
+        sift(topk, i, k - 1)
+    # 2.将剩下的数按条件插入小根堆
+    for j in range(k, len(li)):
+        if li[j] > topk[0]:
+            topk[0] = li[j]
+            sift(topk, 0, k - 1)
+    # 3.依次取数为列表
+    for j in range(k - 1, 0, -1):
+        topk[j], topk[0] = topk[0], topk[j]
+        sift(topk, 0, j - 1)
+    return topk
+
+
 if __name__ == '__main__':
     li = list(range(1000))
     li.append(3)
@@ -127,3 +211,7 @@ if __name__ == '__main__':
     insert_sort(li4)
     li5 = li.copy()
     quick_sort(li5)
+    li6 = li.copy()
+    heap_sort(li6)
+    li6_10 = li.copy()
+    top10 = topk_heap(li6_10,10)
