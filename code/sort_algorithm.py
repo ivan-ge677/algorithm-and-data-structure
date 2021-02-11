@@ -70,6 +70,8 @@ NB三人组
      堆排序最慢
 稳定性：归并排序是稳定排序，快速排序与堆排序是不稳定排序
 """
+
+
 @calc_time
 def quick_sort(li):
     # 快速排序
@@ -243,18 +245,19 @@ def merge_sort(li):
 def shell_sort(li):
     # 希尔排序
     # 分组的内部使用插入排序
-    def insert_sort_gap(li,gap):
-        for i in range(gap,len(li)):
+    def insert_sort_gap(li, gap):
+        for i in range(gap, len(li)):
             val = li[i]
-            j = i-gap
-            while j>=0 and val<li[j]:
-                li[j+gap]=li[j]
-                j-=gap
-            li[j+gap]=val
+            j = i - gap
+            while j >= 0 and val < li[j]:
+                li[j + gap] = li[j]
+                j -= gap
+            li[j + gap] = val
+
     N = len(li)
-    while N>=1:
-        N=N//2
-        insert_sort_gap(li,N)
+    while N >= 1:
+        N = N // 2
+        insert_sort_gap(li, N)
 
 
 @calc_time
@@ -262,27 +265,27 @@ def count_sort(li):
     # 计数排序
     # 明确最大值与最小间隔(这里默认为1）
     max_val = max(li)
-    count_li = [0 for i in range(max_val+1)]
+    count_li = [0 for i in range(max_val + 1)]
     for val in li:
-        count_li[val]+=1
+        count_li[val] += 1
     li.clear()
-    for j,value in enumerate(count_li):
-        li.extend([j]*value)
+    for j, value in enumerate(count_li):
+        li.extend([j] * value)
 
 
 @calc_time
 def bucket_sort(li):
     # 桶排序
     # 桶内部使用冒泡排序的思想进行排序
-    bucket_num = len(li)//10
+    bucket_num = len(li) // 10
     bucket = [[] for i in range(bucket_num)]
     for val in li:
-        ind = min(val//10,bucket_num-1)
+        ind = min(val // 10, bucket_num - 1)
         N = len(bucket[ind])
         bucket[ind].append(val)
-        for i in range(N-1,-1,-1):
+        for i in range(N - 1, -1, -1):
             if val < bucket[ind][i]:
-                bucket[ind][i],bucket[ind][i+1]=bucket[ind][i+1],bucket[ind][i]
+                bucket[ind][i], bucket[ind][i + 1] = bucket[ind][i + 1], bucket[ind][i]
     li.clear()
     for i in range(bucket_num):
         li.extend(bucket[i])
@@ -294,18 +297,15 @@ def radix_sort(li):
     # 利用分桶是稳定的特性，先对个位数分桶，在对十位数分桶，以此类推
     max_value = max(li)
     i = 0
-    while 10**i<=max_value:
+    while 10 ** i <= max_value:
         bucket = [[] for _ in range(10)]
         for var in li:
-            ind = (var//10**i)%10
+            ind = (var // 10 ** i) % 10
             bucket[ind].append(var)
         li.clear()
         for buc in bucket:
             li.extend(buc)
-        i +=1
-
-
-
+        i += 1
 
 
 if __name__ == '__main__':
