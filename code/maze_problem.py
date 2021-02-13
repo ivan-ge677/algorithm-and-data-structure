@@ -101,5 +101,5 @@ if __name__ == '__main__':
     end = (10, 12)
     maze1 = copy.deepcopy(maze_max)
     find_path_stack(maze1, start, end)
-    maze2 = copy.deepcopy(maze_max)
-    find_path_deque(maze2, start, end)
+    # maze2 = copy.deepcopy(maze_max)
+    # find_path_deque(maze2, start, end)
